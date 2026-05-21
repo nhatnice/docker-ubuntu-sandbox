@@ -63,17 +63,78 @@ docker run -d -e ROOT_PASSWORD=yourpassword ...
 
 ### docker-compose
 
-Set it in a `.env` file alongside your `docker-compose.yml`:
+Copy `.env.example` to `.env` and fill in your values:
+
+```bash
+cp .env.example .env
+```
 
 ```env
 ROOT_PASSWORD=yourpassword
+SSH_PUBLIC_KEY=ssh-ed25519 AAAA... your_email@example.com
 ```
 
-Or pass it inline:
+Or pass inline:
 
 ```bash
 ROOT_PASSWORD=yourpassword docker compose up -d
 ```
+
+---
+
+## 🗝️ SSH Key Authentication
+
+Key-based auth is more secure than passwords. Pass your public key via `SSH_PUBLIC_KEY` and it will be written to `/root/.ssh/authorized_keys` at startup.
+
+### 1. Get your public key
+
+```bash
+cat ~/.ssh/id_ed25519.pub
+# or
+cat ~/.ssh/id_rsa.pub
+```
+
+If you don't have a key yet, generate one:
+
+```bash
+ssh-keygen -t ed25519 -C "your_email@example.com"
+```
+
+### 2. Pass the key to the container
+
+**docker run:**
+
+```bash
+docker run -d \
+  -p 2222:22 \
+  -v ssh_host_keys:/etc/ssh \
+  -v ssh_authorized_keys:/root/.ssh \
+  -v workspace:/home/ubuntu/workspace \
+  -e ROOT_PASSWORD=yourpassword \
+  -e SSH_PUBLIC_KEY="$(cat ~/.ssh/id_ed25519.pub)" \
+  --name docker-ubuntu-sandbox \
+  ghcr.io/nhatnice/docker-ubuntu-sandbox:latest
+```
+
+**docker-compose:** add the key to your `.env` file:
+
+```env
+SSH_PUBLIC_KEY=ssh-ed25519 AAAA... your_email@example.com
+```
+
+Then start:
+
+```bash
+docker compose up -d
+```
+
+### 3. Connect without a password
+
+```bash
+ssh -p 2222 root@localhost
+```
+
+> The `authorized_keys` file is stored in the `ssh_authorized_keys` named volume so it persists across container restarts. Updating `SSH_PUBLIC_KEY` and restarting the container will overwrite it with the new key.
 
 ---
 
@@ -88,7 +149,7 @@ The `/home/ubuntu/workspace` directory is the agent's persistent home. Everythin
 This sandbox is designed for **development and experimentation**. Before using in any production or networked environment:
 
 - **Always set `ROOT_PASSWORD`** to a strong value via the environment variable
-- Add your SSH public key to `/root/.ssh/authorized_keys` and disable password auth entirely
+- Set `SSH_PUBLIC_KEY` to your public key and disable password auth (`PasswordAuthentication no`) for stronger security
 - Consider creating a non-root user for the agent
 - Restrict `PermitRootLogin` in `/etc/ssh/sshd_config`
 

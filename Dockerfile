@@ -46,6 +46,9 @@ RUN git config --system core.fileMode true \
 WORKDIR /etc/ssh
 VOLUME ["/etc/ssh"]
 
+RUN mkdir -p /root/.ssh && chmod 700 /root/.ssh
+VOLUME ["/root/.ssh"]
+
 WORKDIR /home/ubuntu/workspace
 VOLUME ["/home/ubuntu/workspace"]
 
