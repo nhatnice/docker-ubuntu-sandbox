@@ -40,18 +40,20 @@ RUN mkdir /var/run/sshd
 RUN sed -i 's/#PermitRootLogin prohibit-password/PermitRootLogin yes/' /etc/ssh/sshd_config \
     && sed -i 's/#PasswordAuthentication yes/PasswordAuthentication yes/' /etc/ssh/sshd_config
 
-# Set a default root password (change this!)
-RUN echo 'root:changeme' | chpasswd
-
 RUN git config --system core.fileMode true \
     && git config --system init.defaultBranch main
 
 WORKDIR /etc/ssh
 VOLUME ["/etc/ssh"]
 
-WORKDIR /workspace
-VOLUME ["/workspace"]
+WORKDIR /home/ubuntu/workspace
+VOLUME ["/home/ubuntu/workspace"]
+
+COPY entrypoint.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh
+
+ENV ROOT_PASSWORD=changeme
 
 EXPOSE 22
 
-CMD ["/usr/sbin/sshd", "-D"]
+ENTRYPOINT ["/entrypoint.sh"]

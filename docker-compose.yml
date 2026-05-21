@@ -3,7 +3,9 @@ services:
     image: ghcr.io/nhatnice/docker-ubuntu-sandbox:latest
     volumes:
       - ssh_host_keys:/etc/ssh
-      - workspace:/workspace
+      - workspace:/home/ubuntu/workspace
+    environment:
+      - ROOT_PASSWORD=${ROOT_PASSWORD:-changeme}
     ports:
       - "2222:22"
 

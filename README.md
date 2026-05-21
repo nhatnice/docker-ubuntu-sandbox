@@ -15,7 +15,7 @@ Modern AI Agents need a safe, controlled environment to perform real work: writi
 - 🐳 **Docker-based** — fully isolated, reproducible, and easy to spin up anywhere
 - 🔧 **Git pre-installed** — agents can clone, commit, push, and pull out of the box
 - 🔐 **SSH access on port 22** — connect any agent or client remotely
-- 💾 **Persistent `/workspace` volume** — work survives container restarts
+- 💾 **Persistent `/home/ubuntu/workspace` volume** — work survives container restarts
 - 📦 **Auto-published to GHCR** — GitHub Actions builds and pushes the image on every release
 
 ---
@@ -33,8 +33,9 @@ docker pull ghcr.io/nhatnice/docker-ubuntu-sandbox:latest
 ```bash
 docker run -d \
   -p 22:22 \
-  -v workspace:/workspace \
+  -v workspace:/home/ubuntu/workspace \
   -v ssh_host_keys:/etc/ssh \
+  -e ROOT_PASSWORD=yourpassword \
   --name docker-ubuntu-sandbox \
   ghcr.io/nhatnice/docker-ubuntu-sandbox:latest
 ```
@@ -43,16 +44,42 @@ docker run -d \
 
 ```bash
 ssh root@localhost
-# default password: changeme
+# password: whatever you set in ROOT_PASSWORD (default: changeme)
 ```
 
-> ⚠️ **Change the default password** before exposing this container to any network.
+> ⚠️ **Always set `ROOT_PASSWORD`** before exposing this container to any network.
+
+---
+
+## 🔑 Root Password
+
+The root password is set at container startup via the `ROOT_PASSWORD` environment variable. If not provided, it defaults to `changeme`.
+
+### docker run
+
+```bash
+docker run -d -e ROOT_PASSWORD=yourpassword ...
+```
+
+### docker-compose
+
+Set it in a `.env` file alongside your `docker-compose.yml`:
+
+```env
+ROOT_PASSWORD=yourpassword
+```
+
+Or pass it inline:
+
+```bash
+ROOT_PASSWORD=yourpassword docker compose up -d
+```
 
 ---
 
 ## 📁 Workspace
 
-The `/workspace` directory is the agent's persistent home. Everything written here survives container restarts thanks to a Docker named volume.
+The `/home/ubuntu/workspace` directory is the agent's persistent home. Everything written here survives container restarts thanks to a Docker named volume.
 
 ---
 
@@ -60,8 +87,8 @@ The `/workspace` directory is the agent's persistent home. Everything written he
 
 This sandbox is designed for **development and experimentation**. Before using in any production or networked environment:
 
-- Change the root password or disable password auth entirely
-- Add your SSH public key to `/root/.ssh/authorized_keys`
+- **Always set `ROOT_PASSWORD`** to a strong value via the environment variable
+- Add your SSH public key to `/root/.ssh/authorized_keys` and disable password auth entirely
 - Consider creating a non-root user for the agent
 - Restrict `PermitRootLogin` in `/etc/ssh/sshd_config`
 
@@ -80,7 +107,8 @@ docker build -t docker-ubuntu-sandbox .
 ```bash
 docker run -d \
   -p 2222:22 \
-  -v $(pwd)/workspace:/workspace \
+  -e ROOT_PASSWORD=devpassword \
+  -v $(pwd)/workspace:/home/ubuntu/workspace \
   --name docker-ubuntu-sandbox-dev \
   docker-ubuntu-sandbox
 ```
