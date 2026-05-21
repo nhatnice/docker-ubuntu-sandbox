@@ -23,4 +23,4 @@ if [ -n "${SSH_PUBLIC_KEY}" ]; then
 fi
 
 /usr/sbin/sshd
-exec mcp-server-everything sse
+exec mcp-server-everything streamableHttp
