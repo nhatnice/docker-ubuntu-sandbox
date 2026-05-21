@@ -22,4 +22,5 @@ if [ -n "${SSH_PUBLIC_KEY}" ]; then
     chmod 600 /root/.ssh/authorized_keys
 fi
 
-exec /usr/sbin/sshd -D
+/usr/sbin/sshd
+exec mcp-server-everything --transport sse --port 3000
