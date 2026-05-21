@@ -34,7 +34,7 @@ docker pull ghcr.io/nhatnice/docker-ubuntu-sandbox:latest
 docker run -d \
   -p 22:22 \
   -v workspace:/home/ubuntu/workspace \
-  -v ssh_host_keys:/etc/ssh \
+  -v ssh_host_keys:/var/lib/ssh-host-keys \
   -e ROOT_PASSWORD=yourpassword \
   --name docker-ubuntu-sandbox \
   ghcr.io/nhatnice/docker-ubuntu-sandbox:latest
@@ -107,7 +107,7 @@ ssh-keygen -t ed25519 -C "your_email@example.com"
 ```bash
 docker run -d \
   -p 2222:22 \
-  -v ssh_host_keys:/etc/ssh \
+  -v ssh_host_keys:/var/lib/ssh-host-keys \
   -v ssh_authorized_keys:/root/.ssh \
   -v workspace:/home/ubuntu/workspace \
   -e ROOT_PASSWORD=yourpassword \
