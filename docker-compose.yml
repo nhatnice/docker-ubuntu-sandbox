@@ -1,0 +1,12 @@
+services:
+  sandbox:
+    image: ghcr.io/nhatnice/docker-ubuntu-sandbox:latest
+    volumes:
+      - ssh_host_keys:/etc/ssh
+      - workspace:/workspace
+    ports:
+      - "2222:22"
+
+volumes:
+  ssh_host_keys:
+  workspace:

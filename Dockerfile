@@ -46,6 +46,9 @@ RUN echo 'root:changeme' | chpasswd
 RUN git config --system core.fileMode true \
     && git config --system init.defaultBranch main
 
+WORKDIR /etc/ssh
+VOLUME ["/etc/ssh"]
+
 WORKDIR /workspace
 VOLUME ["/workspace"]
 

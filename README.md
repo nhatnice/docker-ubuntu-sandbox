@@ -33,7 +33,8 @@ docker pull ghcr.io/nhatnice/docker-ubuntu-sandbox:latest
 ```bash
 docker run -d \
   -p 22:22 \
-  -v agent_workspace:/workspace \
+  -v workspace:/workspace \
+  -v ssh_host_keys:/etc/ssh \
   --name docker-ubuntu-sandbox \
   ghcr.io/nhatnice/docker-ubuntu-sandbox:latest
 ```
