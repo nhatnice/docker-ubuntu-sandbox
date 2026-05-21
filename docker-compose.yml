@@ -3,12 +3,15 @@ services:
     image: ghcr.io/nhatnice/docker-ubuntu-sandbox:latest
     volumes:
       - ssh_host_keys:/etc/ssh
+      - ssh_authorized_keys:/root/.ssh
       - workspace:/home/ubuntu/workspace
     environment:
       - ROOT_PASSWORD=${ROOT_PASSWORD:-changeme}
+      - SSH_PUBLIC_KEY=${SSH_PUBLIC_KEY:-}
     ports:
       - "2222:22"
 
 volumes:
   ssh_host_keys:
+  ssh_authorized_keys:
   workspace:
