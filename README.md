@@ -32,10 +32,12 @@ docker pull ghcr.io/nhatnice/docker-ubuntu-sandbox:latest
 
 ```bash
 docker run -d \
-  -p 22:22 \
-  -v workspace:/home/ubuntu/workspace \
+  -p 2222:22 \
   -v ssh_host_keys:/var/lib/ssh-host-keys \
+  -v ssh_authorized_keys:/root/.ssh \
+  -v workspace:/home/ubuntu/workspace \
   -e ROOT_PASSWORD=yourpassword \
+  -e SSH_PUBLIC_KEY="$(cat ~/.ssh/id_ed25519.pub)" \
   --name docker-ubuntu-sandbox \
   ghcr.io/nhatnice/docker-ubuntu-sandbox:latest
 ```
