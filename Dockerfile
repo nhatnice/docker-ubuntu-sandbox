@@ -36,7 +36,7 @@ RUN curl -fsSL https://bun.sh/install | bash
 ENV PATH="/root/.bun/bin:$PATH"
 
 # Install MCP
-RUN npm install -g @modelcontextprotocol/server-command-runner
+RUN npm install -g mcp-server-commands
 
 # Configure SSH
 RUN mkdir /var/run/sshd
