@@ -23,4 +23,4 @@ if [ -n "${SSH_PUBLIC_KEY}" ]; then
 fi
 
 /usr/sbin/sshd
-exec mcp-server-everything --transport sse --port 3000
+exec mcp-server-everything sse
