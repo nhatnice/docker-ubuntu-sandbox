@@ -6,6 +6,7 @@ ENV DEBIAN_FRONTEND=noninteractive
 # Install base packages + GitHub CLI repo key
 RUN apt-get update && apt-get install -y \
     git \
+    build-essential \
     openssh-server \
     curl \
     vim \
@@ -14,6 +15,7 @@ RUN apt-get update && apt-get install -y \
     python3-venv \
     gnupg \
     unzip \
+    wget \
     && curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg \
         | dd of=/usr/share/keyrings/githubcli-archive-keyring.gpg \
     && chmod go+r /usr/share/keyrings/githubcli-archive-keyring.gpg \
@@ -32,6 +34,9 @@ RUN curl -fsSL https://deb.nodesource.com/setup_lts.x | bash - \
 # Install Bun
 RUN curl -fsSL https://bun.sh/install | bash
 ENV PATH="/root/.bun/bin:$PATH"
+
+# Install MCP
+RUN npm install -g @modelcontextprotocol/server-command-runner
 
 # Configure SSH
 RUN mkdir /var/run/sshd
