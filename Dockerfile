@@ -43,8 +43,8 @@ RUN sed -i 's/#PermitRootLogin prohibit-password/PermitRootLogin yes/' /etc/ssh/
 RUN git config --system core.fileMode true \
     && git config --system init.defaultBranch main
 
-WORKDIR /etc/ssh
-VOLUME ["/etc/ssh"]
+RUN mkdir -p /var/lib/ssh-host-keys
+VOLUME ["/var/lib/ssh-host-keys"]
 
 RUN mkdir -p /root/.ssh && chmod 700 /root/.ssh
 VOLUME ["/root/.ssh"]
