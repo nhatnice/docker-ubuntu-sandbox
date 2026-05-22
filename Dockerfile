@@ -38,6 +38,9 @@ ENV PATH="/root/.bun/bin:$PATH"
 # Install MCP
 RUN npm install -g @modelcontextprotocol/server-everything
 
+# Install LobeHub CLI
+RUN npm install -g @lobehub/cli
+
 # Configure SSH
 RUN mkdir /var/run/sshd
 
